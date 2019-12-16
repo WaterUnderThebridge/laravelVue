@@ -64,6 +64,11 @@ export const constantRoutes = [
     hidden: true,
   },
   {
+    path: '/attachments',
+    component: () => import('@/views/attachments/index'),
+    hidden: true,
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/AuthRedirect'),
     hidden: true,

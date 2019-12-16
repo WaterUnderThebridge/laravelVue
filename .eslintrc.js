@@ -23,7 +23,7 @@ module.exports = {
     'camelcase': [0, {
       'properties': 'always'
     }],
-    'comma-dangle': ['error', 'always-multiline'],
+    'comma-dangle': ['error', 'only-multiline'],
     'comma-spacing': [2, {
       'before': false,
       'after': true
@@ -87,6 +87,7 @@ module.exports = {
     'no-throw-literal': 2,
     'no-trailing-spaces': 2,
     'no-undef-init': 2,
+    'no-undef': 0,
     'no-unmodified-loop-condition': 2,
     'no-unneeded-ternary': [2, {
       'defaultAssignment': false
