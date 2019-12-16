@@ -24,6 +24,7 @@
     <meta name="msapplication-TileImage" content="/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
     <link href="{{ mix('css/app.css') }}" type="text/css" rel="stylesheet" />
+    <script src="https://bbk.800app.com/uploadfile/staticresource/238592/279833/gym.js"></script>
 </head>
 <body>
     <div id="app">
@@ -34,7 +35,7 @@
     <script src="{{ mix('js/vendor.js') }}"></script>
     <script src="{{ mix('js/manifest.js') }}"></script>
     <script src="{{ mix('js/app.js') }}"></script>
-    <script src="https://bbk.800app.com/uploadfile/staticresource/238592/279833/gym.js"></script>
+
 
 </body>
 </html>

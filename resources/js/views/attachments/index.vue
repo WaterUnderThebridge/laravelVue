@@ -1,21 +1,16 @@
 <template>
   <div id='app'>
-    <router-view/>
     <el-upload
       v-if='isShow2'
       class='upload-demo'
       drag
-      action='https://oss.thelittlegym.com.cn/oss/upload'
+      action='/attachments/upload'
       :on-success='success'
       multiple>
       <i class='el-icon-upload'></i>
       <div class='el-upload__text'>将文件拖到此处，或<em>点击上传</em></div>
     </el-upload>
-
-    <el-table
-      :data='list'
-      style='width: 100%'
-      align='center'>
+    <el-table  :data='list' style='width: 100%' align='center'>
       <el-table-column
         type='index'
         label='序号'
@@ -40,7 +35,6 @@
         label='操作'
         width='100'>
         <template slot-scope='scope'>
-          <!-- <el-button  size='small' type='primary' icon='el-icon-download'  @click='down(scope.row.name)'>下载</el-button> -->
           <a :href='url+scope.row.name'   title='图片,txt点击右键另存下载'>下载</a>
           <el-button v-if='isShow' type='text' @click='del(scope.row.name)' class='dete'>删除</el-button>
         </template>
@@ -50,6 +44,9 @@
 </template>
 
 <script>
+import Resource from '@/api/resource';
+const attachmentsRes = new Resource('attachments');
+
 export default {
   name: 'App',
   data() {
@@ -58,7 +55,6 @@ export default {
       isShow2: false,
       list: [],
       url: 'https://tlgc.oss-cn-shanghai.aliyuncs.com/attachment/download/'
-
     };
   },
   computed: {
@@ -67,32 +63,24 @@ export default {
   watch: {
 
   },
+  mounted(){
+    this.getAcl();
+  },
   methods: {
-    submitUpload() {
-      this.$refs.upload.submit();
-    },
     del(name) {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
-      }).then(() => {
-        let that = this;
-        this.$http({
-          method: 'post',
-          // url:'http://localhost/del.php',
-          url: 'https://oss.thelittlegym.com.cn/oss/del',
-          data: {
-            test: name,
-          },
-        }).then(function(res){
-          // console.log(res.data);
-          that.$message({
+      }).then(async() => {
+        const { success } = await attachmentsRes.destroy(name);
+        if (success) {
+          this.$message({
             type: 'success',
             message: '删除成功!',
           });
-          that.getList();
-        });
+          this.getList();
+        }
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -100,66 +88,54 @@ export default {
         });
       });
     },
-    success(file) {
+    success() {
       this.getList();
     },
-    getList(){
-      const url = `https://oss.thelittlegym.com.cn/oss`;
-      this.$http.get(url).then(resp => {
-        const temp = resp.data.map(item => {
-          item.name = item.name.substr(20);
+    async getList(){
+      const res = await attachmentsRes.list();
+      if (res.success) {
+        let temp = res.data;
+        console.error(temp);
+        temp = temp.map(item => {
+          item.name = item.split('/').unshift();
           item.time = this.utcToDate(item.time);
           return item;
-        })
+        });
         this.list = temp;
-      });
+      }
     },
-
     formatFunc(str){
       return str > 9 ? str : '0' + str;
     },
     utcToDate(utctime){
-      if (!utctime){
+      if (!utctime) {
         return '-';
       }
       const date2 = new Date(utctime);
       const year = date2.getFullYear();
-      const mon = this.formatFunc(date2.getMonth()+1);
+      const mon = this.formatFunc(date2.getMonth() + 1);
       const day = this.formatFunc(date2.getDate());
       const hour = this.formatFunc(date2.getHours());
       const min = this.formatFunc(date2.getMinutes());
       const dateStr = year + '-' + mon + '-' + day + ' ' + hour + ':' + min;
       return dateStr;
     },
-
     // 权限查询
-    getAcl(){
-      const url = 'https://bbk.800app.com/uploadfile/staticresource/238592/279833/dataInterface_jsonp_uni.aspx';
-      let sql_quanxian = 'select crm_jiandang from crm_yh_238592_view where id=iduser'
-      const param = GetRequest()
-      if(param && param.iduser){
-        sql_quanxian = sql_quanxian.replace(/iduser/ig,param.iduser);
+    async getAcl(){
+      let sql_quanxian = 'select crm_jiandang from crm_yh_238592_view where id=iduser';
+      const { iduser } = this.$route.query;
+      if (iduser){
+        sql_quanxian = sql_quanxian.replace(/iduser/ig, iduser);
       }
-      const self = this;
-      this.$jsonp(url, {
-        sql1: sql_quanxian
-      }).then(res => {
-        res = JSON.parse(res);
-        const acl = res.info[0].rec[0].crm_jiandang;
-        if (res.info[0].rec.constructor !== String && acl === '系统管理员' || acl === '运营顾问'){
-          self.isShow2 = true;
-          if (acl === '系统管理员'){
-            self.isShow = true;
-          }
-          self.getList();
-        } else {
-          alert('非法访问或权限不够'); return false;
-        }
-      });
+      const acl = await attachmentsRes.oasisGet(sql_quanxian);
+      const allowed = ['系统管理员', '运营顾问'];
+      console.error(acl);
+      if (acl && allowed.includes(acl)){
+        this.getList();
+      } else {
+        alert('非法访问或权限不够'); return false;
+      }
     }
-  },
-  created(){
-    this.getAcl();
   }
 };
 </script>

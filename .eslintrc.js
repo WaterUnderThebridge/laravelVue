@@ -7,7 +7,7 @@ module.exports = {
     sourceType: 'module'
   },
   env: {
-    browser: true,
+    browser: false,
     node: true,
     es6: true,
   },
@@ -146,5 +146,6 @@ module.exports = {
     'vue/no-v-html': 'off',
     'vue/multiline-html-element-content-newline': 'off',
     'vue/singleline-html-element-content-newline': 'off',
+    'vue/html-quotes': 'off'
   },
 };
