@@ -138,7 +138,7 @@ export default {
       }
       let acl = await axios.get(url, {
         params: { sql1: sql_quanxian }
-      })
+      });
       acl = acl && acl.data;
       const allowed = ['系统管理员', '运营顾问'];
       if (acl && allowed.includes(acl)){
