@@ -13,7 +13,7 @@
 /vendor
 /public/*.js
 /public/*.js.map
-
+/nodejs
 /node_modules/cnpm/
 .env.backup
 .idea
