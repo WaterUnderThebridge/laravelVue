@@ -2,7 +2,7 @@
 
 
 use App\Laravue\JsonResponse;
-use App\service\WorkApi;
+use App\Service\WorkApi;
 use Illuminate\Support\Facades\Log;
 
 
