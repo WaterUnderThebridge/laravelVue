@@ -1,10 +1,9 @@
 <template>
   <div id='app'>
     <el-upload
-      v-if='isShow2'
       class='upload-demo'
       drag
-      action='/attachments/upload'
+      action='/api/oss?resourceUrl=attachment/download'
       :on-success='success'
       multiple>
       <i class='el-icon-upload'></i>
@@ -45,14 +44,14 @@
 
 <script>
 import Resource from '@/api/resource';
-const attachmentsRes = new Resource('attachments');
+import axios from 'axios';
+const attachmentsRes = new Resource('oss');
 
 export default {
   name: 'App',
   data() {
     return {
       isShow: false,
-      isShow2: false,
       list: [],
       url: 'https://tlgc.oss-cn-shanghai.aliyuncs.com/attachment/download/'
     };
@@ -73,13 +72,18 @@ export default {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(async() => {
-        const { success } = await attachmentsRes.destroy(name);
+        const { success } = await attachmentsRes.delete(name, { resourceUrl: 'attachment/download' });
         if (success) {
           this.$message({
             type: 'success',
             message: '删除成功!',
           });
           this.getList();
+        } else {
+          this.$message({
+            type: 'error',
+            message: '操作失败!',
+          });
         }
       }).catch(() => {
         this.$message({
@@ -89,15 +93,19 @@ export default {
       });
     },
     success() {
+      this.$message({
+        type: 'success',
+        message: '上传成功!',
+      });
       this.getList();
     },
     async getList(){
-      const res = await attachmentsRes.list();
+      // this.list = [];
+      const res = await attachmentsRes.list({ resourceUrl: 'attachment/download' });
       if (res.success) {
-        let temp = res.data;
-        console.error(temp);
-        temp = temp.map(item => {
-          item.name = item.split('/').unshift();
+        const temp = res.data;
+        temp.map(item => {
+          item.name = item.name.split('/').pop();
           item.time = this.utcToDate(item.time);
           return item;
         });
@@ -122,19 +130,23 @@ export default {
     },
     // 权限查询
     async getAcl(){
+      const url = 'https://bbk.800app.com//uploadfile/staticresource/238592/279833/api_auto_json.aspx';
       let sql_quanxian = 'select crm_jiandang from crm_yh_238592_view where id=iduser';
       const { iduser } = this.$route.query;
       if (iduser){
         sql_quanxian = sql_quanxian.replace(/iduser/ig, iduser);
       }
-      const acl = await attachmentsRes.oasisGet(sql_quanxian);
+      let acl = await axios.get(url, {
+        params: { sql1: sql_quanxian }
+      })
+      acl = acl && acl.data;
       const allowed = ['系统管理员', '运营顾问'];
-      console.error(acl);
       if (acl && allowed.includes(acl)){
         this.getList();
-      } else {
-        alert('非法访问或权限不够'); return false;
+        this.isShow = true;
+        return;
       }
+      alert('非法访问或权限不够'); return false;
     }
   }
 };

@@ -7,13 +7,6 @@ class Resource {
   constructor(uri) {
     this.uri = uri;
   }
-  oasisGet(sql) {
-    return request({
-      url: 'https://bbk.800app.com//uploadfile/staticresource/238592/279833/api_auto_json.aspx',
-      method: 'get',
-      params: { sql1: sql },
-    });
-  }
   list(query) {
     return request({
       url: '/' + this.uri,
@@ -39,6 +32,13 @@ class Resource {
       url: '/' + this.uri + '/' + id,
       method: 'put',
       data: resource,
+    });
+  }
+  delete(id, query = []) {
+    return request({
+      url: '/' + this.uri + '/' + id,
+      method: 'delete',
+      params: query,
     });
   }
   destroy(id) {

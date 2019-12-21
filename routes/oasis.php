@@ -1,29 +1,47 @@
 <?php
 
 use App\Laravue\JsonResponse;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Service\OSS;
 
 
 Route::group(['prefix' => 'api'], function () {
+    /*
     Route::get('/attachments', function () {
         //Storage::put('/attachment/download/baidu.jpg', file_get_contents("https://www.baidu.com/img/bd_logo1.png?where=super"));
         $files = Storage::allFiles('/attachment/download/');
         return response()->json(new JsonResponse($files));
 
     });
-
-    Route::get('/oss', function () {
-        $files = OSS::oss_list('/attachment/download/');
-        return response()->json(new JsonResponse($files));
-
-    });
-
     Route::get('/preparation_files/{gymcode?}', function ($gymcode = '500004') {
         //?表示可选，但必须有默认值
         $dir = "/preparationFiles/{$gymcode}";
         $files = Storage::allFiles($dir);
         return response()->json(new JsonResponse($files));
+    });*/
+    Route::get('/oss/{id?}', function ($id = "") {
+        $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
+        $files = OSS::oss_list("$resourceUrl/$id");
+        return response()->json(new JsonResponse($files));
     });
+    Route::delete('/oss/{id}', function ($id) {
+        $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
+        $res = OSS::deleteObject("${resourceUrl}/${id}");
+        return response()->json(new JsonResponse($res));
+    });
+    Route::post('/oss', function () {
+        if (Request::hasFile('file')) {
+            $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
+            $file = Request::file('file');
+            // 重命名文件
+            $fileName = $file->getClientOriginalName();
+            $res = OSS::upload("${resourceUrl}/${fileName}",$file->getRealPath());
+            return response()->json(new JsonResponse($res));
+        }
+        return response()->json(new JsonResponse());
+    });
+
+
 });
 ?>

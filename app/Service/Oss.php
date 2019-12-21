@@ -1,5 +1,5 @@
 <?php
-# oss.php
+# Oss.php
 namespace App\Service;
 use OSS\OssClient;
 use Illuminate\Support\Facades\Log;
@@ -17,8 +17,7 @@ class OSS
             config('alioss.AccessKeySecret'),
             $serverAddress);
         $this->bucketName=config('alioss.BucketName');
-        Log::info($serverAddress);
-        print_r($this->ossClient);
+
     }
 
     public static function oss_list($url, $delimiter = '/')
@@ -29,8 +28,6 @@ class OSS
             'prefix' => $url,
         );
         try {
-            Log::info($oss->bucketName);
-            Log::info(var_export($options,true));
             $listObjectInfo = $oss->ossClient->listObjects($oss->bucketName, $options);
             $objectList = $listObjectInfo->getObjectList();
             if (!empty($objectList)) {
@@ -54,8 +51,7 @@ class OSS
     public static function upload($ossKey, $filePath)
     {
         $oss = new OSS(); // 上传文件使用内网，免流量费
-        $oss->ossClient->setBucket($oss->bucketName);
-        $res = $oss->ossClient->uploadFile($ossKey, $filePath);
+        $res = $oss->ossClient->uploadFile($oss->bucketName,$ossKey, $filePath);
         return $res;
     }
 
