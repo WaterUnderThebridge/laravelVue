@@ -21,7 +21,8 @@ class EnableCrossRequestMiddleware
             'http://127.0.0.1:8080',//允许访问
             'https://bbk.800app.com',
             'http://bbk.800app.com',
-            'http://localhost'
+            'http://localhost',
+            'http://laravue.test'
         ];
         if (in_array($origin, $allow_origin)) {
             $response->header('Access-Control-Allow-Origin', $origin);
