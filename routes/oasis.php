@@ -43,7 +43,8 @@ Route::group(['prefix' => 'api'], function () {
                     $fileName = $file->getClientOriginalName();
                 }
                 $res = OSS::upload("${resourceUrl}/${fileName}",$file->getRealPath());
-                Log::info($res);
+                // Log::info($res);
+                if(empty($res)) $res="nodata";
                 return response()->json(new JsonResponse($res))
                     ->setCallback(request()->input('callback'));
         } else {
