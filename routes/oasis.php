@@ -24,6 +24,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/oss/{id?}', function ($id = "") {
         $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
         $files = OSS::oss_list("$resourceUrl/$id");
+        if(empty($res)) $files="nodata";
         return response()->json(new JsonResponse($files))
             ->setCallback(request()->input('callback'));
     });
@@ -44,7 +45,6 @@ Route::group(['prefix' => 'api'], function () {
                 }
                 $res = OSS::upload("${resourceUrl}/${fileName}",$file->getRealPath());
                 // Log::info($res);
-                if(empty($res)) $res="nodata";
                 return response()->json(new JsonResponse($res))
                     ->setCallback(request()->input('callback'));
         } else {
