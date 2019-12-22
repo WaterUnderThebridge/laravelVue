@@ -34,7 +34,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::post('/oss', function () {
         if (Request::hasFile('file')) {
                 $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
-                $file = file('file');
+                $file = Request::file('file');
                 // 重命名文件
                 $fileName = Request::input("filename",$file->getClientOriginalName());
                 $res = OSS::upload("${resourceUrl}/${fileName}",$file->getRealPath());
