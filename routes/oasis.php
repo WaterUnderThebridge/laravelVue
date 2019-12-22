@@ -36,7 +36,10 @@ Route::group(['prefix' => 'api'], function () {
                 $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
                 $file = Request::file('file');
                 // 重命名文件
-                $fileName = Request::input("filename",$file->getClientOriginalName());
+                $fileName = Request::input("filename").$file-> extension();
+                if(empty($fileName)){
+                    $fileName = $file->getClientOriginalName();
+                }
                 $res = OSS::upload("${resourceUrl}/${fileName}",$file->getRealPath());
                 Log::info($res);
                 return response()->json(new JsonResponse($res));
