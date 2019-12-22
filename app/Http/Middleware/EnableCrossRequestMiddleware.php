@@ -15,7 +15,7 @@ class EnableCrossRequestMiddleware
      */
     public function handle($request, Closure $next)
     {
-        return $next($request);
+        $response = $next($request);
         $origin = $request->server('HTTP_ORIGIN') ? $request->server('HTTP_ORIGIN') : '';
         $allow_origin = [
             'http://127.0.0.1:8080',//允许访问
