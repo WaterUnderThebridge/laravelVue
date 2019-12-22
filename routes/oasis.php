@@ -42,9 +42,11 @@ Route::group(['prefix' => 'api'], function () {
                 }
                 $res = OSS::upload("${resourceUrl}/${fileName}",$file->getRealPath());
                 Log::info($res);
-                return response()->json(new JsonResponse($res));
+                return response()->json(new JsonResponse($res))
+                    ->setCallback(request()->input('callback'));;
         } else {
-                return response()->json(new JsonResponse("","no file"));
+                return response()->json(new JsonResponse("","no file"))
+                    ->setCallback(request()->input('callback'));;
         }
     });
 
