@@ -28,14 +28,14 @@ Route::group(['prefix' => 'api'], function () {
             ->setCallback(request()->input('callback'));
     });
     Route::delete('/oss/{id}', function ($id) {
-        $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
+        $resourceUrl = trim(Request::input("resourceUrl"),"/");
         $res = OSS::deleteObject("${resourceUrl}/${id}");
         return response()->json(new JsonResponse($res))
         ->setCallback(request()->input('callback'));
     });
     Route::post('/oss', function () {
         if (Request::hasFile('file')) {
-                $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
+                $resourceUrl = trim(Request::input("resourceUrl"),"/");
                 $file = Request::file('file');
                 // 重命名文件
                 $fileName = Request::input("filename").".".$file-> extension();
