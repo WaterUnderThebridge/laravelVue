@@ -33,15 +33,16 @@ Route::group(['prefix' => 'api'], function () {
     });
     Route::post('/oss', function () {
         if (Request::hasFile('file')) {
-            $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
-            $file = Request::file('file');
-            // 重命名文件
-            $fileName = $file->getClientOriginalName();
-            $res = OSS::upload("${resourceUrl}/${fileName}",$file->getRealPath());
-            Log::info($res);
-            return response()->json(new JsonResponse($res));
+                $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
+                $file = Request::file('file');
+                // 重命名文件
+                $fileName = $file->getClientOriginalName();
+                $res = OSS::upload("${resourceUrl}/${fileName}",$file->getRealPath());
+                Log::info($res);
+                return response()->json(new JsonResponse($res));
+        } else {
+                return response()->json(new JsonResponse("","no file"));
         }
-        return response()->json(new JsonResponse());
     });
 
 
