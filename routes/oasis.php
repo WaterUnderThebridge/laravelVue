@@ -24,12 +24,14 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/oss/{id?}', function ($id = "") {
         $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
         $files = OSS::oss_list("$resourceUrl/$id");
-        return response()->json(new JsonResponse($files));
+        return response()->json(new JsonResponse($files))
+            ->setCallback(request()->input('callback'));
     });
     Route::delete('/oss/{id}', function ($id) {
         $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
         $res = OSS::deleteObject("${resourceUrl}/${id}");
-        return response()->json(new JsonResponse($res));
+        return response()->json(new JsonResponse($res))
+        ->setCallback(request()->input('callback'));
     });
     Route::post('/oss', function () {
         if (Request::hasFile('file')) {
@@ -43,10 +45,10 @@ Route::group(['prefix' => 'api'], function () {
                 $res = OSS::upload("${resourceUrl}/${fileName}",$file->getRealPath());
                 Log::info($res);
                 return response()->json(new JsonResponse($res))
-                    ->setCallback(request()->input('callback'));;
+                    ->setCallback(request()->input('callback'));
         } else {
                 return response()->json(new JsonResponse("","no file"))
-                    ->setCallback(request()->input('callback'));;
+                    ->setCallback(request()->input('callback'));
         }
     });
 
