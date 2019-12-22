@@ -36,7 +36,7 @@ Route::group(['prefix' => 'api'], function () {
                 $resourceUrl = rtrim(Request::input("resourceUrl"),"/");
                 $file = Request::file('file');
                 // 重命名文件
-                $fileName = Request::input("filename").$file-> extension();
+                $fileName = Request::input("filename").".".$file-> extension();
                 if(empty($fileName)){
                     $fileName = $file->getClientOriginalName();
                 }
