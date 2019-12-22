@@ -1,6 +1,7 @@
 <?php
 
 use App\Laravue\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Service\OSS;
@@ -37,6 +38,7 @@ Route::group(['prefix' => 'api'], function () {
             // 重命名文件
             $fileName = $file->getClientOriginalName();
             $res = OSS::upload("${resourceUrl}/${fileName}",$file->getRealPath());
+            Log::info($res);
             return response()->json(new JsonResponse($res));
         }
         return response()->json(new JsonResponse());
