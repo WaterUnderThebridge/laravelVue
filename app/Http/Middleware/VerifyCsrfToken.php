@@ -20,5 +20,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/api/oss*',
+        'https://tlgc.thelittlegym.com.cn/api/oss*',
+        'https://tlgc.thelittlegym.com.cn/api/oss'
     ];
 }
