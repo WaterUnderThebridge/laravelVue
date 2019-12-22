@@ -19,7 +19,8 @@ class EnableCrossRequestMiddleware
         $origin = $request->server('HTTP_ORIGIN') ? $request->server('HTTP_ORIGIN') : '';
         $allow_origin = [
             'http://127.0.0.1:8080',//允许访问
-            '//bbk.800app.com'
+            '//bbk.800app.com',
+            'http://localhost'
         ];
         if (in_array($origin, $allow_origin)) {
             $response->header('Access-Control-Allow-Origin', $origin);
