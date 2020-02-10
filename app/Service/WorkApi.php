@@ -165,7 +165,7 @@ class workApi{
         //file_put_contents('e:\LOG\log_work4.txt', "时间: ".date('Y-m-d H:i:s')."${tableId},${recId} \r\n", FILE_APPEND);
         if((!empty($recId)&&$this->exist($tableId,$recId))|| $action==2){
             $url = "{$this->_baseUrl}/{$tableId}/update?";
-            file_put_contents('e:\LOG\log_work2.txt', "时间: ".date('Y-m-d H:i:s')."save_start:".$result."\r\n", FILE_APPEND);
+            //file_put_contents('e:\LOG\log_work2.txt', "时间: ".date('Y-m-d H:i:s')."save_start:".$result."\r\n", FILE_APPEND);
             //clear parentid of dpt,not update parentid
             if($tableId=='department'&&$action!=118){
                 unset($arrObj['parentid']);
