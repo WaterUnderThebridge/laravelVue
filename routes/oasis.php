@@ -39,9 +39,9 @@ Route::group(['prefix' => 'api'], function () {
                 $resourceUrl = trim(Request::input("resourceUrl"),"/");
                 $file = Request::file('file');
                 // 重命名文件
-                $fileName = Request::input("filename").".".$file-> extension();
+                $fileName = Request::input("filename");
                 if(empty($fileName)){
-                    $fileName = $file->getClientOriginalName();
+                    $fileName = $file->getClientOriginalName().".".$file-> extension();
                 }
                 $res = OSS::upload("${resourceUrl}/${fileName}",$file->getRealPath());
                 // Log::info($res);
