@@ -65,8 +65,8 @@ return [
         ],
         'oss' => [
             'driver'     => 'oss',
-            'access_id'  => 'LTAINOIAX5ukko3f',//Your Aliyun OSS AccessKeyId
-            'access_key' => 'pN8Gu74uXKifzhi5TCTZ2EbDgYOoBX',//Your Aliyun OSS AccessKeySecret
+            'access_id'  => '',//Your Aliyun OSS AccessKeyId
+            'access_key' => '',//Your Aliyun OSS AccessKeySecret
             'bucket'     => 'tlgc',//OSS bucket name
             'endpoint'   => 'oss-cn-shanghai.aliyuncs.com', //<the endpoint of OSS, E.g: oss-cn-hangzhou.aliyuncs.com | custom domain, E.g:img.abc.com> OSS 外网节点或自定义外部域名
             //'endpoint_internal' => '', //<internal endpoint [OSS内网节点] 如：oss-cn-shenzhen-internal.aliyuncs.com> v2.0.4 新增配置属性，如果为空，则默认使用 endpoint 配置(由于内网上传有点小问题未解决，请大家暂时不要使用内网节点上传，正在与阿里技术沟通中)
